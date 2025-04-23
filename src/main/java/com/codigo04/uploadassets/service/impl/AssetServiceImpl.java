@@ -40,6 +40,8 @@ public class AssetServiceImpl implements AssetService {
             throw new RuntimeException("error.asset.max-size");
         }
 
+        this.disableAssetByName(name);
+
         FileNameExtension fileNameExtension = getFileNameExtension(file.getOriginalFilename());
         String finalAssetName = (name != null && !name.isBlank()) ? name : fileNameExtension.name();
         String uniqueFileName = generateUniqueName(finalAssetName);
@@ -65,6 +67,15 @@ public class AssetServiceImpl implements AssetService {
     public void deleteAsset(Long id) {
         Asset asset = assetRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("error.asset.no.existe"));
         assetRepository.delete(asset);
+    }
+
+    private void disableAssetByName(String name) {
+        if (name != null && !name.isBlank()) {
+            assetRepository.findByNameAndIsDeletedFalse(name).ifPresent(asset -> {
+                asset.setIsDeleted(true);
+                assetRepository.save(asset);
+            });
+        }
     }
 
     private String getFilePath(String uniqueFileNameExtension) {
