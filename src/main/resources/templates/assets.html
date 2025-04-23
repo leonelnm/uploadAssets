@@ -1,27 +1,31 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <title>Upload Assets</title>
-</head>
-<body>
-
-<h1>Upload Assets</h1>
-
-<div th:if="${mensaje}">
-    <p th:text="${mensaje}" style="color: green;"></p>
-</div>
-
-<form method="POST" th:action="@{/asset}" enctype="multipart/form-data">
-    <label for="name">Nombre:</label><br>
-    <input type="text" id="name" name="name"><br><br>
-
-    <label for="file">Selecciona un archivo:</label><br>
-    <input type="file" id="file" name="file" accept="*/*" required><br><br>
-
-    <button type="submit">Subir</button>
-</form>
+    <head>
+        <meta charset="UTF-8">
+        <title>Upload Assets</title>
+        <!--<link rel="stylesheet" href="/static/css/styles.css">-->
+        <link rel="stylesheet" th:href="@{/css/styles.css}">
+    </head>
+    <body>
 
 
-</body>
+        <form class="max-w-sm mx-auto" method="POST" th:action="@{/asset}" enctype="multipart/form-data">
+            <header>
+                <h1 class="text-3xl font-bold">Upload Assets</h1>
+                <p>Administra archivos en tu espacio</p>
+            </header>
+            <section>
+                <label for="file">Select file</label>
+                <input id="file" type="file" name="file" required/>
+
+                <label for="name">Asset name</label>
+                <input id="name" type="text" name="name" placeholder="Insert name or leave blank to use file name"/>
+                <small class="text-xs">Si se deja en blanco, se usará el nombre del archivo</small>
+
+            </section>
+            <section>
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+            </section>
+        </form>
+    </body>
 </html>
