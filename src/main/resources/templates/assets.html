@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Assets</title>
+</head>
+<body>
+
+<h1>Upload Assets</h1>
+
+<div th:if="${mensaje}">
+    <p th:text="${mensaje}" style="color: green;"></p>
+</div>
+
+<form method="POST" th:action="@{/asset}" enctype="multipart/form-data">
+    <label for="name">Nombre:</label><br>
+    <input type="text" id="name" name="name"><br><br>
+
+    <label for="file">Selecciona un archivo:</label><br>
+    <input type="file" id="file" name="file" accept="*/*" required><br><br>
+
+    <button type="submit">Subir</button>
+</form>
+
+
+</body>
+</html>
