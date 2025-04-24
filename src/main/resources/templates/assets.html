@@ -7,25 +7,102 @@
         <link rel="stylesheet" th:href="@{/css/styles.css}">
     </head>
     <body>
+    
+        <div class="min-h-screen flex flex-col bg-slate-50">
+            <header class="h-16 border-b border-gray-200 px-4">
+                <div class="w-full h-full mx-auto max-w-xl flex items-center justify-end">
 
-
-        <form class="max-w-sm mx-auto" method="POST" th:action="@{/asset}" enctype="multipart/form-data">
-            <header>
-                <h1 class="text-3xl font-bold">Upload Assets</h1>
-                <p>Administra archivos en tu espacio</p>
+                    <a class="text-gray-700 hover:text-gray-900 hover:bg-gray-100 hover:rounded-xl flex p-4">
+                        <span>Cerrar Sesión</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m-3 3H9" />
+                        </svg>
+                    </a>
+                </div>
             </header>
-            <section>
-                <label for="file">Select file</label>
-                <input id="file" type="file" name="file" required/>
+            <div class="flex flex-1 overflow-hidden">
+                <div class="grow flex items-center justify-center">
 
-                <label for="name">Asset name</label>
-                <input id="name" type="text" name="name" placeholder="Insert name or leave blank to use file name"/>
-                <small class="text-xs">Si se deja en blanco, se usará el nombre del archivo</small>
+                    <main class="p-6 bg-white rounded-xl shadow-md">
+                        <h1 class="text-xl font-semibold mb-8 text-blue-700 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.757 1.565 9 9 0 01-10.556 5.625z" />
+                            </svg>
+                            Cargar Archivos
+                        </h1>
+                        <form th:action="@{/asset}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-6">
+                            <div>
+                                <label for="file" class="block text-gray-700 text-sm font-medium mb-2 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.757 1.565 9 9 0 01-10.556 5.625z" />
+                                    </svg>
+                                    Seleccionar Archivo:
+                                </label>
+                                <div class="relative rounded-lg shadow-sm border border-gray-300 overflow-hidden focus-within:ring-blue-500 focus-within:border-blue-500">
+                                    <label for="file" class="cursor-pointer bg-white py-2 px-4 block w-full text-gray-700 focus:outline-none">
+                                        <span id="file-name" class="text-gray-400">Selecciona un archivo</span>
+                                    </label>
+                                    <input
+                                            id="file"
+                                            name="file"
+                                            type="file"
+                                            class="sr-only"
+                                            onchange="document.getElementById('file-name').textContent = this.files[0] ? this.files[0].name : 'Selecciona un archivo'"
+                                            required
+                                    />
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-400">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.757 1.565 9 9 0 01-10.556 5.625z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p class="text-gray-500 text-xs italic flex items-center mt-1">
+                                    Formatos soportados: PNG, JPG, WEBP
+                                </p>
+                            </div>
+                            <div>
+                                <label for="name" class="block text-gray-700 text-sm font-medium mb-2 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V16.5m-3-6V16.5m3-6V16.5M3 4.754C3 4.367 3.367 4 3.754 4h16.492c.387 0 .754.367.754.754v15.492c0 .387-.367.754-.754.754H3.754c-.387 0-.754-.367-.754-.754V4.754z" />
+                                    </svg>
+                                    Nombre del Archivo:
+                                </label>
+                                <input
+                                        type="text"
+                                        id="name"
+                                        name="name"
+                                        class="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                        placeholder="Ingresa un nombre para el archivo"
+                                />
+                                <p class="text-gray-500 text-xs italic flex items-center mt-1">
+                                    Opcional: Si no se inserta un nombre se usará el nombre del archivo.
+                                </p>
+                            </div>
+                            <div class="flex justify-end gap-4">
+                                <button
+                                        type="button"
+                                        class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-gray-300 focus:ring-offset-2 flex items-center"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                    Cancelar
+                                </button>
+                                <button
+                                        type="submit"
+                                        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md focus:outline-none focus:ring-blue-300 focus:ring-offset-2 flex items-center"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.757 1.565 9 9 0 01-10.556 5.625z" />
+                                    </svg>
+                                    Guardar Fichero
+                                </button>
+                            </div>
+                        </form>
+                    </main>
 
-            </section>
-            <section>
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-            </section>
-        </form>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
