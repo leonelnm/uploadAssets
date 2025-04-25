@@ -1,22 +1,53 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Upload Assets</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login · Upload Assets</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
 
-    <h1>Upload Assets</h1>
+<div class="min-h-screen flex flex-col bg-slate-50">
+    <div class="flex flex-1 overflow-hidden">
+        <div class="grow flex items-center justify-center">
+            <main class="p-6 bg-white rounded-xl shadow-md w-full max-w-sm">
+                <h1 class="text-xl font-semibold mb-8 text-blue-700 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.757 1.565 9 9 0 01-10.556 5.625z" />
+                    </svg>
+                    Login
+                </h1>
 
-    <form method="POST" action="/api/assets" enctype="multipart/form-data">
-        <label for="nombre">Nombre:</label><br>
-        <input type="text" id="nombre" name="nombre" required><br><br>
+                <form th:action="@{/login}" method="POST" class="flex flex-col gap-6" >
+                    <div>
+                        <label for="username" class="block text-gray-700 text-sm font-medium mb-2 flex items-center">Usuario</label>
+                        <input type="text" name="username" id="username"
+                               class="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                               placeholder="miusuario"
+                               required>
+                    </div>
+                    <div>
+                        <label for="password" class="block text-gray-700 text-sm font-medium mb-2 flex items-center">Contraseña</label>
+                        <input type="password" name="password" id="password"
+                               placeholder="••••••••"
+                               class="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                               required>
+                    </div>
+                    <div class="flex justify-end gap-4">
+                        <button
+                                type="submit"
+                                class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md focus:outline-none focus:ring-blue-300 focus:ring-offset-2 flex items-center"
+                        >
+                            Iniciar Sesión
+                        </button>
+                    </div>
+                </form>
 
-        <label for="file">Selecciona un archivo:</label><br>
-        <input type="file" id="file" name="file" accept="*/*" required><br><br>
-
-        <button type="submit">Subir</button>
-    </form>
+            </main>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

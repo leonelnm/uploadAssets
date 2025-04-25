@@ -4,14 +4,12 @@ import com.codigo04.uploadassets.config.AssetsProperties;
 import com.codigo04.uploadassets.models.Asset;
 import com.codigo04.uploadassets.repository.AssetRepository;
 import com.codigo04.uploadassets.service.AssetService;
+import com.codigo04.uploadassets.service.StorageService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
@@ -21,10 +19,12 @@ public class AssetServiceImpl implements AssetService {
 
     private final AssetRepository assetRepository;
     private final AssetsProperties assetsProperties;
+    private final StorageService storageService;
 
-    public AssetServiceImpl(AssetRepository assetRepository, AssetsProperties assetsProperties) {
+    public AssetServiceImpl(AssetRepository assetRepository, AssetsProperties assetsProperties, StorageService storageService) {
         this.assetRepository = assetRepository;
         this.assetsProperties = assetsProperties;
+        this.storageService = storageService;
     }
 
     @Override
@@ -40,10 +40,12 @@ public class AssetServiceImpl implements AssetService {
             throw new RuntimeException("error.asset.max-size");
         }
 
-        this.disableAssetByName(name);
 
         FileNameExtension fileNameExtension = getFileNameExtension(file.getOriginalFilename());
         String finalAssetName = (name != null && !name.isBlank()) ? name : fileNameExtension.name();
+
+        this.deleteAssetByName(finalAssetName);
+
         String uniqueFileName = generateUniqueName(finalAssetName);
         String uniqueFileNameExtension = uniqueFileName + fileNameExtension.extension();
         String urlPublic = getUrlPublic(uniqueFileNameExtension);
@@ -58,7 +60,7 @@ public class AssetServiceImpl implements AssetService {
                 .filePath(filePath)
                 .build();
 
-        this.saveAssetOnDisk(filePath, file);
+        storageService.saveAsset(filePath, file);
         assetRepository.save(asset);
 
     }
@@ -66,13 +68,14 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public void deleteAsset(Long id) {
         Asset asset = assetRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("error.asset.no.existe"));
+        storageService.deleteAsset(asset.getFilePath());
         assetRepository.delete(asset);
     }
 
-    private void disableAssetByName(String name) {
+    private void deleteAssetByName(String name) {
         if (name != null && !name.isBlank()) {
             assetRepository.findByNameAndIsDeletedFalse(name).ifPresent(asset -> {
-                asset.setIsDeleted(true);
+                storageService.deleteAsset(asset.getFilePath());
                 assetRepository.save(asset);
             });
         }
@@ -82,18 +85,6 @@ public class AssetServiceImpl implements AssetService {
         return assetsProperties.getPath() + "/" + uniqueFileNameExtension;
     }
 
-    private void saveAssetOnDisk(String filePath, MultipartFile file) {
-        try {
-            Path path = Path.of(filePath);
-            if (Files.exists(path)) {
-                Files.delete(path);
-            }
-            Files.createDirectories(path.getParent());
-            file.transferTo(path);
-        } catch (IOException e) {
-            throw new RuntimeException("error.asset.save-on-disk", e);
-        }
-    }
 
     private String getUrlPublic(String uniqueFileName) {
         return assetsProperties.getUrlPublic() + "/" + uniqueFileName;

@@ -2,9 +2,8 @@ package com.codigo04.uploadassets.api;
 
 import com.codigo04.uploadassets.models.Asset;
 import com.codigo04.uploadassets.service.AssetService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,5 +20,10 @@ public class AssetRestController {
     @GetMapping
     public List<Asset> getAssets() {
         return assetService.findAll();
+    }
+
+    @PostMapping
+    public void saveAsset(@RequestBody MultipartFile file, @RequestParam(required = false) String name) {
+        assetService.saveAsset(file, name);
     }
 }
