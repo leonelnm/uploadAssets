@@ -76,7 +76,7 @@ public class AssetServiceImpl implements AssetService {
         if (name != null && !name.isBlank()) {
             assetRepository.findByNameAndIsDeletedFalse(name).ifPresent(asset -> {
                 storageService.deleteAsset(asset.getFilePath());
-                assetRepository.save(asset);
+                assetRepository.delete(asset);
             });
         }
     }
