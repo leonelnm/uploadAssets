@@ -13,7 +13,7 @@ public class AuthWebController {
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error, Model model) {
         if(error != null) model.addAttribute("error", "Username or password invalid");
-        return "login";
+        return "loginPage";
     }
 
 }
