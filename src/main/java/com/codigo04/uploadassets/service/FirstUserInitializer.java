@@ -5,7 +5,6 @@ import com.codigo04.uploadassets.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
 public class FirstUserInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
 
     @Value("${app.assets.default.user}")
     private String username;
@@ -31,7 +29,7 @@ public class FirstUserInitializer implements CommandLineRunner {
 
         User deafultUser = User.builder()
                 .username(username)
-                .password(passwordEncoder.encode(password))
+                .password(password)
                 .email(email)
                 .build();
 
