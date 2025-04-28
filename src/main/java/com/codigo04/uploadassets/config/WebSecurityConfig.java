@@ -4,6 +4,7 @@ import com.codigo04.uploadassets.security.JwtAuthenticationFilter;
 import com.codigo04.uploadassets.service.impl.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -17,44 +18,32 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+@Order(2)
+public class WebSecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .securityMatcher("/**")
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**").permitAll()
-                        .requestMatchers("/login", "/api/auth/login").permitAll()
+                        .requestMatchers("/login").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(exceptions -> exceptions
-                        .authenticationEntryPoint(
-                                (request, response, authException) -> {
-                                    if(request.getRequestURI().startsWith("/api/")){
-                                        response.sendError(HttpStatus.UNAUTHORIZED.value());
-                                    }else{
-                                        response.sendRedirect("/login");
-                                    }
-                                }))
+                        .authenticationEntryPoint((request, response, authException) ->
+                                response.sendRedirect("/login")))
                 .formLogin(login -> login
                         .loginPage("/login")
                         .defaultSuccessUrl("/assets", true)
                         .permitAll())
                 .userDetailsService(userDetailsService)
-                .addFilterBefore(
-                        new JwtAuthenticationFilter(),
-                        UsernamePasswordAuthenticationFilter.class)
                 .build();
-
-
     }
 
     @Bean
