@@ -1,0 +1,25 @@
+name: Deploy to VPS with Docker
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    env:
+      ASSETS_DEFAULT_USER: ${{ secrets.ASSETS_DEFAULT_USER }}
+      ASSETS_DEFAULT_PASS: ${{ secrets.ASSETS_DEFAULT_PASS }}
+      ASSETS_DEFAULT_EMAIL: ${{ secrets.ASSETS_DEFAULT_EMAIL }}
+      DB_PATH: ${{ env.DB_PATH }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build and Deploy with Docker
+        run: |
+          docker compose down
+          docker compose build
+          docker compose up -d
