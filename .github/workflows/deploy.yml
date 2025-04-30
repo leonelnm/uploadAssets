@@ -12,7 +12,7 @@ jobs:
       ASSETS_DEFAULT_USER: ${{ secrets.ASSETS_DEFAULT_USER }}
       ASSETS_DEFAULT_PASS: ${{ secrets.ASSETS_DEFAULT_PASS }}
       ASSETS_DEFAULT_EMAIL: ${{ secrets.ASSETS_DEFAULT_EMAIL }}
-      DB_PATH: ${{ env.DB_PATH }}
+      DB_PATH: ${{ secrets.DB_PATH }}
 
     steps:
       - name: Checkout code
