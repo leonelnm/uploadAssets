@@ -18,6 +18,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Crear archivo .env con secretos
+        run: |
+          echo "DB_VOLUME=${{ secrets.DB_VOLUME }}" >> .env
+          echo "ASSETS_VOLUME=${{ secrets.ASSETS_VOLUME }}" >> .env
+
       - name: Build and Deploy with Docker
         run: |
           docker compose down

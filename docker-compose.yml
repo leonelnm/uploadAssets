@@ -12,6 +12,9 @@ services:
     ports:
       - "8080:8087"
     restart: unless-stopped
+    volumes:
+      - ${ASSETS_VOLUME}:/app/assets
+      - ${DB_VOLUME}:/var/local
     networks:
       - backend
 

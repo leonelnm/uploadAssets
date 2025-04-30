@@ -16,11 +16,10 @@ FROM gradle:8.13-jdk21-alpine AS java_builder
 
 WORKDIR /app
 
-COPY build.gradle.kts settings.gradle.kts gradle ./
+COPY build.gradle.kts settings.gradle.kts ./
 COPY gradle gradle
 RUN gradle build --no-daemon --dry-run || true
 
-COPY src src
 COPY . .
 
 # Copiamos el output.css generado

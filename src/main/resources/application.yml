@@ -31,7 +31,7 @@ spring.jpa.hibernate.ddl-auto: update
 
 app:
   assets:
-    path: /tmp/assets
+    path: /app/assets/santjhoane
     max-size: 10485760 #10mb
     url-public: /santjhoane
     jwt:
