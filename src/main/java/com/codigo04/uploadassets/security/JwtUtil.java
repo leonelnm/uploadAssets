@@ -1,34 +1,44 @@
 package com.codigo04.uploadassets.security;
 
+import com.codigo04.uploadassets.config.JwtAssetsProperties;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 
+@Component
 public class JwtUtil {
 
-    private static final String JWT_SECRET = "mi_clave_secreta_mas_secreta_de_muuuuy_secreta";  // Cambia esta clave por una más segura
-    private static final long JWT_EXPIRATION = 86400000; // 24h
+    private final JwtAssetsProperties jwtAssetsProperties;
+
+    public JwtUtil(JwtAssetsProperties jwtAssetsProperties) {
+        this.jwtAssetsProperties = jwtAssetsProperties;
+    }
 
     public String generateToken(String username) {
         Date now = new Date();
-        Date expirationDate = new Date(now.getTime() + JWT_EXPIRATION);
+        Date expirationDate = new Date(now.getTime() + jwtAssetsProperties.getExpiration());
 
         return Jwts.builder()
                 .subject(username)
                 .issuedAt(now)
                 .expiration(expirationDate)
-                .signWith(Keys.hmacShaKeyFor(JWT_SECRET.getBytes()))
+                .signWith(this.getSecretKey())
                 .compact();
     }
 
     public String getUsernameFromToken(String token) {
         return Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(JWT_SECRET.getBytes()))
+                .verifyWith(this.getSecretKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload().getSubject();
+    }
+
+    private SecretKey getSecretKey() {
+        return Keys.hmacShaKeyFor(jwtAssetsProperties.getSecret().getBytes());
     }
 
 }

@@ -8,8 +8,8 @@ spring:
 
 
 # mostrar sql en logs
-spring.jpa.show-sql: true
-spring.jpa.properties.hibernate.format_sql: true
+#spring.jpa.show-sql: true
+#spring.jpa.properties.hibernate.format_sql: true
 #spring.jpa.properties.hibernate.show_sql: true
 
 # h2
@@ -18,7 +18,7 @@ spring.jpa.properties.hibernate.format_sql: true
 #spring.h2.console.enabled: true
 
 # sqlite
-spring.datasource.url: jdbc:sqlite:assets.db
+spring.datasource.url: jdbc:sqlite:${DB_PATH:assets.db}
 spring.datasource.driver-class-name: org.sqlite.JDBC
 spring.jpa.database-platform: org.hibernate.community.dialect.SQLiteDialect
 spring.jpa.hibernate.ddl-auto: update
@@ -34,3 +34,10 @@ app:
     path: /tmp/assets
     max-size: 10485760 #10mb
     url-public: /santjhoane
+    jwt:
+      secret: ${ASSETS_JWT_SECRET:supersecret_supersecret_supersecret}
+      expiration: 86400000 # 1 day
+    default:
+      user: ${ASSETS_DEFAULT_USER:dev}
+      pass: ${ASSETS_DEFAULT_PASS:$2a$10$ETga2m/788UjNHvoBUyOQ.Uk9vWwq4x4eHFCYHCCUeFJMfs3LDhj2}
+      email: ${ASSETS_DEFAULT_EMAIL:dev@localhost}

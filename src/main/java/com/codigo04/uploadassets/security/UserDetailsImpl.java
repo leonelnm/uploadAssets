@@ -7,13 +7,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-public class UserDetailsImpl implements UserDetails {
-
-    private final User user;
-
-    public UserDetailsImpl(User user) {
-        this.user = user;
-    }
+/**
+ * UserDetailsImpl is a custom implementation of the UserDetails interface.
+ * It represents the authenticated user in the Spring Security context.
+ * This class is used to provide user information to the Spring Security framework.
+ */
+public record UserDetailsImpl(User user) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

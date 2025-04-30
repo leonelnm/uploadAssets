@@ -7,6 +7,10 @@ plugins {
 group = "com.codigo04"
 version = "0.0.1-SNAPSHOT"
 
+springBoot {
+	mainClass.set("com.codigo04.uploadassets.UploadassetsApplication")
+}
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)

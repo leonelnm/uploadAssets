@@ -8,6 +8,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -18,16 +19,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class ApiSecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public ApiSecurityConfig(UserDetailsServiceImpl userDetailsService) {
+    public ApiSecurityConfig(UserDetailsServiceImpl userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userDetailsService = userDetailsService;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
         return http
                 .securityMatcher("/api/**")
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
@@ -38,21 +41,15 @@ public class ApiSecurityConfig {
                             response.setContentType("application/json");
                             response.setStatus(HttpStatus.UNAUTHORIZED.value());
                             response.getOutputStream().println(
-                                    "{\"error\": \"Unauthorized\", \"message\": \"" + authException.getMessage() + "\"}"
+                                    "{\"message\": \"" + "Invalid credentials" + "\"}"
                             );
                         }))
                 .userDetailsService(userDetailsService)
                 .addFilterBefore(
-                        jwtAuthenticationFilter(),
+                        jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class)
                 .build();
 
     }
-
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter();
-    }
-
 
 }

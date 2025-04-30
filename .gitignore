@@ -38,4 +38,8 @@ out/
 
 *.db
 
+.env
+
 /node_modules/
+
+styles.css
