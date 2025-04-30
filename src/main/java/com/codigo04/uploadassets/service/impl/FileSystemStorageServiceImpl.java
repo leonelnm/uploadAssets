@@ -1,5 +1,6 @@
 package com.codigo04.uploadassets.service.impl;
 
+import com.codigo04.uploadassets.exceptions.AppRuntimeException;
 import com.codigo04.uploadassets.service.StorageService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +23,7 @@ public class FileSystemStorageServiceImpl implements StorageService {
             Files.createDirectories(path.getParent());
             file.transferTo(path);
         } catch (IOException e) {
-            throw new RuntimeException("error.asset.save-on-disk", e);
+            throw new AppRuntimeException("error.asset.save-on-disk", e);
         }
     }
 
@@ -32,7 +33,7 @@ public class FileSystemStorageServiceImpl implements StorageService {
             Path path = Path.of(filePath);
             Files.delete(path);
         } catch (IOException e) {
-            throw new RuntimeException("error.asset.delete-on-disk", e);
+            throw new AppRuntimeException("error.asset.delete-on-disk", e);
         }
     }
 }

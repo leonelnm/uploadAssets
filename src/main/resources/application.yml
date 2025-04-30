@@ -36,7 +36,7 @@ app:
     url-public: /santjhoane
     jwt:
       secret: ${ASSETS_JWT_SECRET:supersecret_supersecret_supersecret}
-      expiration: 86400000 # 1 day
+      expiration: ${ASSETS_JWT_EXPIRATION:86400000} # DEFAULT 1 day
     default:
       user: ${ASSETS_DEFAULT_USER:dev}
       pass: ${ASSETS_DEFAULT_PASS:$2a$10$ETga2m/788UjNHvoBUyOQ.Uk9vWwq4x4eHFCYHCCUeFJMfs3LDhj2}

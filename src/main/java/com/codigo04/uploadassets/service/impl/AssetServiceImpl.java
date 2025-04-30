@@ -1,11 +1,14 @@
 package com.codigo04.uploadassets.service.impl;
 
+import com.codigo04.uploadassets.api.dto.AssetDto;
 import com.codigo04.uploadassets.config.AssetsProperties;
+import com.codigo04.uploadassets.exceptions.AppRuntimeException;
 import com.codigo04.uploadassets.models.Asset;
 import com.codigo04.uploadassets.repository.AssetRepository;
 import com.codigo04.uploadassets.service.AssetService;
 import com.codigo04.uploadassets.service.StorageService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +18,7 @@ import java.util.List;
 import java.util.Random;
 
 @Service
+@Slf4j
 public class AssetServiceImpl implements AssetService {
 
     private final AssetRepository assetRepository;
@@ -35,9 +39,13 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     @Transactional
-    public void saveAsset(MultipartFile file, String name) {
+    public AssetDto saveAsset(MultipartFile file, String name) {
+        if (file == null){
+            throw new AppRuntimeException("error.asset.file.null");
+        }
+
         if (file.getSize() > assetsProperties.getMaxSize()) {
-            throw new RuntimeException("error.asset.max-size");
+            throw new AppRuntimeException("error.asset.max-size");
         }
 
 
@@ -63,6 +71,9 @@ public class AssetServiceImpl implements AssetService {
         storageService.saveAsset(filePath, file);
         assetRepository.save(asset);
 
+        log.info("Asset saved: {}", asset.getName());
+
+        return new AssetDto(asset);
     }
 
     @Override
